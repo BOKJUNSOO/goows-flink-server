@@ -1,0 +1,1 @@
+flink run -c goows.flink.server.App /opt/flink/usrlib/app.jar

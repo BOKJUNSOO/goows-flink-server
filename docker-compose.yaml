@@ -1,0 +1,34 @@
+services:
+  jobmanager:
+    image: flink:1.17.1
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    volumes:
+      - ./app/build/libs:/opt/flink/usrlib
+      - ./app/job:/opt/flink/job
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager        
+
+
+  taskmanager:
+    image: flink:1.17.1
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    volumes:
+      - ./app/build/libs:/opt/flink/usrlib
+      - ./app/job:/opt/flink/job
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2 
+
+networks:
+  default:
+    name: goows
+    external: false
