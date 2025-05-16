@@ -55,24 +55,4 @@ public class App {
 //        env.execute("world count example1");
         env.execute("long long text world count");
     }
-
-//    public static final class Tokenizer implements FlatMapFunction<String, Tuple2<String,Integer>> {
-//        @Override
-//        public void flatMap(String value, Collector<Tuple2<String, Integer>> out) {
-//            // 1) 불필요한 문자(한글, 영문, 숫자, 공백 제외)를 모두 공백으로 바꿔준다
-//            String cleaned = value
-//                    .replaceAll("[^가-힣a-zA-Z0-9\\s]", " ")
-//                    // 2) 연속된 공백은 하나로
-//                    .replaceAll("\\s+", " ")
-//                    .trim();
-//
-//            // 3) 공백 단위로 분리
-//            for (String token : cleaned.split(" ")) {
-//                if (!token.isEmpty()) {
-//                    // (원한다면 영문만 toLowerCase())
-//                    out.collect(new Tuple2<>(token, 1));
-//                }
-//            }
-//        }
-//    }
 }
