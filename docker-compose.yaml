@@ -27,8 +27,3 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2 
-
-networks:
-  default:
-    name: goows
-    external: false
