@@ -1,6 +1,7 @@
 package goows.flink.server;
 
 import goows.flink.server.util.KomoranTokenizer;
+import goows.flink.server.util.Top5Sink;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -51,36 +52,12 @@ public class App {
                     "\n"
         );
 
-        //DataStream<String> text = env.socketTextStream();
-
-        // 구문 분석 진행
-        DataStream<Tuple2<String,Integer>> counts = text
-            .flatMap(new KomoranTokenizer())
-            .keyBy(value -> value.f0)
-            .sum(1);
-
-        //
-        counts
-                .countWindowAll(8) // 8개 단위로 한 번 정렬
-                .process(new ProcessAllWindowFunction<Tuple2<String, Integer>, String, GlobalWindow>() {
-                    @Override
-                    public void process(Context context, Iterable<Tuple2<String, Integer>> elements, Collector<String> out) {
-                        List<Tuple2<String, Integer>> list = new ArrayList<>();
-                        for (Tuple2<String, Integer> e : elements) {
-                            list.add(e);
-                        }
-
-                        list.sort((a, b) -> b.f1.compareTo(a.f1)); // 내림차순 정렬
-
-                        StringBuilder sb = new StringBuilder("Top 5:\n");
-                        for (int i = 0; i < Math.min(5, list.size()); i++) {
-                            Tuple2<String, Integer> e = list.get(i);
-                            sb.append(String.format("%d. %s - %d\n", i + 1, e.f0, e.f1));
-                        }
-                        out.collect(sb.toString());
-                    }
-                })
-                .print();
+        // one-off to sink
+        text
+                .flatMap(new KomoranTokenizer())
+                .keyBy(tuple -> tuple.f0)
+                .sum(1)
+                .addSink(new Top5Sink());
         env.execute("Top 5 Elements by Integer Value");
     }
 }
