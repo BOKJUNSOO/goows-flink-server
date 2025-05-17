@@ -30,6 +30,10 @@ dependencies {
     implementation libs.guava
     implementation "org.apache.flink:flink-streaming-java:${flinkVersion}"
     implementation 'com.github.shin285:KOMORAN:3.3.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
