@@ -10,7 +10,9 @@ services:
     environment:
       - |
         FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager        
+        jobmanager.rpc.address: jobmanager
+    networks:
+      - goows
 
 
   taskmanager:
@@ -26,4 +28,10 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2 
+        taskmanager.numberOfTaskSlots: 2
+    networks:
+      - goows
+
+networks:
+  goows:
+    external: true
