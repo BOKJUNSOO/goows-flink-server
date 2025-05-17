@@ -28,8 +28,17 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
+    // flink
     implementation "org.apache.flink:flink-streaming-java:${flinkVersion}"
+    implementation "org.apache.flink:flink-clients:${flinkVersion}"
+
+    // kafka
+    implementation "org.apache.flink:flink-connector-kafka:1.17.1"
+
+    // komoran
     implementation 'com.github.shin285:KOMORAN:3.3.9'
+
+    // jackson
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
