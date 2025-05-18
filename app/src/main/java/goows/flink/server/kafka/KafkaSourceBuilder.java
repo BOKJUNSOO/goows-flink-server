@@ -18,7 +18,7 @@ public class KafkaSourceBuilder {
                 new SimpleStringSchema(),
                 props
         );
-        consumer.setStartFromLatest();
+        consumer.setStartFromEarliest();
         return consumer;
     }
 }
