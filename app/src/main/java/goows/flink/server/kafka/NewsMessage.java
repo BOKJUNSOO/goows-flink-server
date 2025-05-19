@@ -10,7 +10,7 @@ import java.util.List;
 // string 형태의 json 을 역직렬화
 @Getter
 @Setter
-public class NewsSearchSendDataDto {
+public class NewsMessage {
 
     private String memberId;
 
