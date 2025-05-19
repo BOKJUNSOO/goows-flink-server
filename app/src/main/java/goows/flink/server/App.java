@@ -24,15 +24,12 @@ public class App {
         DataStream<String> input = env.addSource(KafkaSourceBuilder.create("news-search-topic"));
 
 
-        // 키워드, userId 파싱
+        // 데이터 전처리
         DataStream<NewsMessage> parsed = input
                 .map(json -> new ObjectMapper()
                         .readValue(json, NewsMessage.class)
                 );
-
-        parsed.toString();
-
-        // newsList 필드만 JSON 문자열로 변환
+        
         DataStream<UserText> enrichedDescriptions = parsed.map(dto -> {
             String descriptionsJson;
             try {
@@ -40,6 +37,8 @@ public class App {
             } catch (Exception e) {
                 descriptionsJson = "[]";
             }
+            // memberId, description 파싱
+            // TODO: keyword 파싱 및 실시간 스트리밍 집계처리 !!
             return new UserText(dto.getMemberId(), descriptionsJson);
         });
 

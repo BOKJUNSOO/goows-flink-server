@@ -15,6 +15,4 @@ public class UserText {
         this.memberId = memberId;
         this.description = description;
     }
-
-    // getter, setter
 }
