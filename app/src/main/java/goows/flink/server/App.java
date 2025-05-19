@@ -30,6 +30,7 @@ public class App {
                         .readValue(json, NewsMessage.class)
                 );
         
+        // 키워드 추천을 위한 전처리
         DataStream<UserText> enrichedDescriptions = parsed.map(dto -> {
             String descriptionsJson;
             try {
@@ -38,15 +39,20 @@ public class App {
                 descriptionsJson = "[]";
             }
             // memberId, description 파싱
-            // TODO: keyword 파싱 및 실시간 스트리밍 집계처리 !!
             return new UserText(dto.getMemberId(), descriptionsJson);
         });
+
+        // TODO: kewory 파싱 및 실시간 스트리밍 집계처리
+        // DataStream<Something new class in here> ~_~
 
 
         // one-off
         enrichedDescriptions
                 .map(new KomoranProcessor())
                 .addSink(new Top5Sink());
+        
+        // stream ranking windows
+        // some sink code~
 
         env.execute("Single Top 5 keywords");
     }
