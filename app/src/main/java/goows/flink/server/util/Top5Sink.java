@@ -1,6 +1,5 @@
 package goows.flink.server.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -9,7 +8,6 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Top5Sink extends RichSinkFunction<String> {
     private transient KafkaProducer<String, String> producer;

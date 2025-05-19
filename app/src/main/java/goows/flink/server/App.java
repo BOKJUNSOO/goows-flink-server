@@ -14,7 +14,7 @@ public class App {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // 카프카 토픽으로부터 데이터 구독
-        DataStream<String> input = env.addSource(KafkaSourceBuilder.create("news_search_topic"));
+        DataStream<String> input = env.addSource(KafkaSourceBuilder.create("news-search-topic"));
         input.print();
 
         // one-off
