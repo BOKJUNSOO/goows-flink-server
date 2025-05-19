@@ -25,6 +25,7 @@ public class Top5Sink extends RichSinkFunction<String> {
     public void invoke(String value, Context context) throws Exception {
         ProducerRecord<String, String> record = new ProducerRecord<>("top5-keywords", value);
         producer.send(record);
+        System.out.println(record);
     }
 }
 

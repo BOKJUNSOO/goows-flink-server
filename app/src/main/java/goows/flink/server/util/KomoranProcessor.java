@@ -1,6 +1,7 @@
 package goows.flink.server.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goows.flink.server.kafka.UserText;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -11,7 +12,7 @@ import org.apache.flink.configuration.Configuration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class KomoranProcessor extends RichMapFunction<String, String> {
+public class KomoranProcessor extends RichMapFunction<UserText, String> {
     private transient Komoran komoran;
 
     @Override
@@ -20,8 +21,8 @@ public class KomoranProcessor extends RichMapFunction<String, String> {
     }
 
     @Override
-    public String map(String value) {
-        KomoranResult result = komoran.analyze(value);
+    public String map(UserText value) {
+        KomoranResult result = komoran.analyze(value.getDescription());
         List<Token> tokens = result.getTokenList();
 
         Map<String, Integer> counts = new HashMap<>();
@@ -33,7 +34,6 @@ public class KomoranProcessor extends RichMapFunction<String, String> {
             }
         }
 
-        // top 5 키워드 추출
         Map<String, Integer> top5 = counts.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()))
                 .limit(5)
@@ -44,14 +44,19 @@ public class KomoranProcessor extends RichMapFunction<String, String> {
                         LinkedHashMap::new
                 ));
 
-        // JSON 직렬화
+        // consumer 에게 전달할 데이터
         try {
-            return new ObjectMapper().writeValueAsString(top5);
+            List<String> keywords = new ArrayList<>(top5.keySet());
+            Map<String, Object> sorting = new HashMap<>();
+            sorting.put("user_id", value.getMemberId());
+            sorting.put("top5", keywords);
+            return new ObjectMapper().writeValueAsString(sorting);
         } catch (Exception e) {
-            return "{}";  // fallback
+            return "{}";
         }
     }
 }
+
 
 
 
