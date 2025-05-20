@@ -1,4 +1,4 @@
-package goows.flink.server.util;
+package goows.flink.server.sink;
 
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -15,7 +15,7 @@ public class Top5Sink extends RichSinkFunction<String> {
     @Override
     public void open(Configuration parameters) {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9093");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producer = new KafkaProducer<>(props);
@@ -25,7 +25,14 @@ public class Top5Sink extends RichSinkFunction<String> {
     public void invoke(String value, Context context) throws Exception {
         ProducerRecord<String, String> record = new ProducerRecord<>("top5-keywords", value);
         producer.send(record);
-        System.out.println(record);
+        System.out.printf("message is producing at top5-keywords topic : %s%n",value);
+    }
+
+    @Override
+    public void close() throws Exception {
+        if(producer != null) {
+            producer.close();
+        }
     }
 }
 

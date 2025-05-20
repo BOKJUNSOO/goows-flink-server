@@ -1,4 +1,4 @@
-package goows.flink.server.util;
+package goows.flink.server.mapping;
 
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;

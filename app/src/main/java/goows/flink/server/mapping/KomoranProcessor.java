@@ -1,7 +1,7 @@
-package goows.flink.server.util;
+package goows.flink.server.mapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import goows.flink.server.kafka.UserText;
+import goows.flink.server.dto.UserText;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
 import kr.co.shineware.nlp.komoran.core.Komoran;
 import kr.co.shineware.nlp.komoran.model.KomoranResult;
@@ -48,7 +48,7 @@ public class KomoranProcessor extends RichMapFunction<UserText, String> {
         try {
             List<String> keywords = new ArrayList<>(top5.keySet());
             Map<String, Object> sorting = new HashMap<>();
-            sorting.put("user_id", value.getMemberId());
+            sorting.put("memberId", value.getMemberId());
             sorting.put("top5", keywords);
             return new ObjectMapper().writeValueAsString(sorting);
         } catch (Exception e) {
