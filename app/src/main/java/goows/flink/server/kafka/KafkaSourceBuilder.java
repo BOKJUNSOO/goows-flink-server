@@ -10,7 +10,7 @@ import java.util.Properties;
 public class KafkaSourceBuilder {
     public static FlinkKafkaConsumer<String> create(String topic) {
         Properties props = new Properties();
-        props.setProperty("bootstrap.servers", "kafka:9093");
+        props.setProperty("bootstrap.servers", "localhost:9092");
         props.setProperty("group.id", "flink-consumer-group");
 
         FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>(

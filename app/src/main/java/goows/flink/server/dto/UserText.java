@@ -1,4 +1,4 @@
-package goows.flink.server.kafka;
+package goows.flink.server.dto;
 
 import lombok.Getter;
 import lombok.Setter;

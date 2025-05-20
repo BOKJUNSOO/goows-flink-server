@@ -9,7 +9,7 @@ import java.util.Properties;
 public class KafkaSinkBuilder {
     public static FlinkKafkaProducer<String> create(String topic) {
         Properties props = new Properties();
-        props.setProperty("bootstrap.servers","kafka:9093");
+        props.setProperty("bootstrap.servers","localhost:9092");
 
         return new FlinkKafkaProducer<>(
                 topic,
