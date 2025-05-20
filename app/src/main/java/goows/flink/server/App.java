@@ -2,14 +2,20 @@ package goows.flink.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import goows.flink.server.dto.NewsMessage;
+import goows.flink.server.dto.UserText;
+import goows.flink.server.mapping.KomoranProcessor;
+import goows.flink.server.sink.Top5Sink;
 import goows.flink.server.kafka.KafkaSourceBuilder;
-import goows.flink.server.kafka.NewsMessage;
-import goows.flink.server.kafka.UserText;
-import goows.flink.server.util.KomoranProcessor;
-import goows.flink.server.util.Top5Sink;
+
+import goows.flink.server.sink.TrendingRankSink;
+import goows.flink.server.window.KeywordWindowFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-
+import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.triggers.ContinuousProcessingTimeTrigger;
+import org.apache.flink.streaming.api.windowing.triggers.ProcessingTimeTrigger;
 
 
 public class App {
@@ -29,7 +35,7 @@ public class App {
                 .map(json -> new ObjectMapper()
                         .readValue(json, NewsMessage.class)
                 );
-        
+
         // 키워드 추천을 위한 전처리
         DataStream<UserText> enrichedDescriptions = parsed.map(dto -> {
             String descriptionsJson;
@@ -42,18 +48,27 @@ public class App {
             return new UserText(dto.getMemberId(), descriptionsJson);
         });
 
-        // TODO: kewory 파싱 및 실시간 스트리밍 집계처리
-        // DataStream<Something new class in here> ~_~
+        // 키워드 파싱 및 집계를 위한 전처리
+        // keyWord 파싱
+        DataStream<String> streamKeyword = parsed.map(NewsMessage::getKeyword);
+        // sink 에 넣을 참조변수 추가
+        DataStream<String> keywordCountJson = streamKeyword
+                .windowAll(SlidingProcessingTimeWindows.of(Time.minutes(1), Time.seconds(10)))
+                .trigger(ContinuousProcessingTimeTrigger.of(Time.seconds(10)))
+                .process(new KeywordWindowFunction());
 
-
-        // one-off
+        // one-off sink!
+        // top5-keywords topic
         enrichedDescriptions
                 .map(new KomoranProcessor())
                 .addSink(new Top5Sink());
-        
-        // stream ranking windows
-        // some sink code~
 
+        // stream ranking windows sink!
+        // trending-keywords topic
+        keywordCountJson
+                .addSink(new TrendingRankSink());
+
+        //execute flink job
         env.execute("Single Top 5 keywords");
     }
 }
