@@ -10,9 +10,11 @@ import java.util.Properties;
 public class KafkaSinkBuilder {
     public static FlinkKafkaProducer<String> create(String topic) {
         Properties props = new Properties();
-        Dotenv dotenv = Dotenv.load();
-        String kafkaUrl = dotenv.get("KAFKA_URL");
-        props.setProperty("bootstrap.servers",kafkaUrl);
+//        Dotenv dotenv = Dotenv.configure()
+//                .directory("src/main/resources")
+//                .load();
+//        String kafkaUrl = dotenv.get("KAFKA_URL");
+        props.setProperty("bootstrap.servers","kafka:9092");
 
         return new FlinkKafkaProducer<>(
                 topic,

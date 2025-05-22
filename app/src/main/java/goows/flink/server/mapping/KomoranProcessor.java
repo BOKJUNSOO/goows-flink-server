@@ -17,7 +17,7 @@ public class KomoranProcessor extends RichMapFunction<UserText, String> {
 
     @Override
     public void open(Configuration parameters) {
-        komoran = new Komoran(DEFAULT_MODEL.LIGHT);
+        komoran = new Komoran(DEFAULT_MODEL.FULL);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class KomoranProcessor extends RichMapFunction<UserText, String> {
 
         Map<String, Integer> top5 = counts.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()))
-                .limit(5)
+                .limit(10)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
