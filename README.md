@@ -55,4 +55,4 @@ $ ./flinksubmit.sh
 KAFKA_URL=kafka:9092
 ```
 
-2. build container with [data platform server](www.naver.com)
+2. build container with [data platform server]([www.naver.com](https://github.com/BOKJUNSOO/goows-data-process-server))
