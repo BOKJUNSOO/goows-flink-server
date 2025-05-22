@@ -50,6 +50,9 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
+    // env
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

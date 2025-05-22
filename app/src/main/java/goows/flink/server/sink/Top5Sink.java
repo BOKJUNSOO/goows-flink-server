@@ -1,5 +1,6 @@
 package goows.flink.server.sink;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -15,7 +16,9 @@ public class Top5Sink extends RichSinkFunction<String> {
     @Override
     public void open(Configuration parameters) {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+        Dotenv dotenv = Dotenv.load();
+        String kafkaUrl = dotenv.get("KAFKA_URL");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producer = new KafkaProducer<>(props);
