@@ -52,7 +52,7 @@ public class App {
         DataStream<String> streamKeyword = parsed.map(NewsMessage::getKeyword);
         // sink 에 넣을 참조변수 추가
         DataStream<String> keywordCountJson = streamKeyword
-                .windowAll(SlidingProcessingTimeWindows.of(Time.minutes(60), Time.seconds(10)))
+                .windowAll(SlidingProcessingTimeWindows.of(Time.minutes(3), Time.seconds(10)))
                 .trigger(ContinuousProcessingTimeTrigger.of(Time.seconds(10)))
                 .process(new KeywordWindowFunction());
 

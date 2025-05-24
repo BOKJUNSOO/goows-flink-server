@@ -16,11 +16,9 @@ public class Top5Sink extends RichSinkFunction<String> {
     @Override
     public void open(Configuration parameters) {
         Properties props = new Properties();
-//        Dotenv dotenv = Dotenv.configure()
-//                .directory("src/main/resources")
-//                .load();
-//        String kafkaUrl = dotenv.get("KAFKA_URL");
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+        Dotenv dotenv = Dotenv.configure().directory("src/main/resources").load();
+        String kafkaUrl = dotenv.get("KAFKA_URL");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producer = new KafkaProducer<>(props);
